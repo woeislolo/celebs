@@ -1,0 +1,33 @@
+html, body {
+	font-family: 'Arial';
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	color: #696969;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	color: #CC0000;
+	text-decoration: underline;
+}
+
+#header,
+.module caption,
+#user-tools,
+#user-tools a,
+.breadcrumbs,
+.breadcrumbs a,
+.submit-row input,
+ .button.default, input[type=submit].default, .submit-row input.default {
+    background: #F5CBDD !important;
+    color: grey !important;
+    }
+
+.toggle-nav-sidebar {
+    border: 1px solid #F5CBDD;
+}
