@@ -77,6 +77,10 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Добавление статьи')
         return context | c_def
+    
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class SearchResult(DataMixin, ListView):

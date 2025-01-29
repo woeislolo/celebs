@@ -10,24 +10,24 @@ from .models import *
 class AddPostForm(forms.ModelForm):
     title = forms.CharField(label='Заголовок',
                             widget=forms.TextInput(attrs={'class': 'form-input'}),
-                            validators=[RegexValidator(regex="(^[А-ЯЁ][а-яё]*)( [А-ЯЁ][а-яё]*){0,2}$",
-                                        message='Каждое слово в заголовке должно начинаться с большой буквы.')])
-    slug = forms.SlugField(label='URL', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    content = forms.CharField(label='Статья', widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+                            validators=[RegexValidator(
+                                            regex="(^[А-ЯЁ][а-яё]*)( [А-ЯЁ][а-яё]*){0,2}$",
+                                            message='Каждое слово в заголовке должно начинаться \
+                                            с большой буквы.')])
+    slug = forms.SlugField(label='URL', 
+                           widget=forms.TextInput(attrs={'class': 'form-input'}))
+    content = forms.CharField(label='Статья', 
+                              widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['cat'].empty_label = 'Категория не выбрана'
 
+
     class Meta:
         model = Men
-        # fields = '__all__' # отобразит все поля, кроме тех, что заполняются автоматически
         fields = ['title', 'slug', 'content', 'photo', 'is_published', 'cat']
-        # widgets = {
-        #     'title': forms.TextInput(attrs={'class': 'form-input'}),
-        #     'slug': forms.TextInput(attrs={'class': 'form-input'}),
-        #     'content': forms.Textarea(attrs={'cols': 60, 'rows': 10}),
-        # }
 
 
 class RegisterUserForm(UserCreationForm):

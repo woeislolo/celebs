@@ -12,8 +12,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# from dotenv import dotenv_values
 
+
+# config = dotenv_values()
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,10 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '$s*%r1gecmnezq$gythz)w3y6$-0+vahi$*s)n!cl@t5uve=-w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-# DEBUG = True
+# DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1',]
 
 
 # Application definition
@@ -40,9 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'captcha',
     'debug_toolbar',
+
     'men.apps.MenConfig',
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -53,7 +60,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'celebs.urls'
