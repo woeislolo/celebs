@@ -17,7 +17,7 @@ class DataMixin:
         cats = cache.get('cats')
         if not cats:
             cats = Category.objects.annotate(Count('men'))
-            cache.set('cats', cats, 60)
+            cache.set('cats', cats, 20)
 
         user_menu = menu.copy()
         if not self.request.user.is_authenticated:

@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.validators import RegexValidator
+
 from captcha.fields import CaptchaField, CaptchaTextInput
 
 from .models import *
@@ -14,8 +15,8 @@ class AddPostForm(forms.ModelForm):
                                             regex="(^[А-ЯЁ][а-яё]*)( [А-ЯЁ][а-яё]*){0,2}$",
                                             message='Каждое слово в заголовке должно начинаться \
                                             с большой буквы.')])
-    slug = forms.SlugField(label='URL', 
-                           widget=forms.TextInput(attrs={'class': 'form-input'}))
+    # slug = forms.SlugField(label='URL', 
+    #                        widget=forms.TextInput(attrs={'class': 'form-input'}))
     content = forms.CharField(label='Статья', 
                               widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
 
@@ -27,7 +28,7 @@ class AddPostForm(forms.ModelForm):
 
     class Meta:
         model = Men
-        fields = ['title', 'slug', 'content', 'photo', 'is_published', 'cat']
+        fields = ['title', 'content', 'photo', 'is_published', 'cat',]
 
 
 class RegisterUserForm(UserCreationForm):

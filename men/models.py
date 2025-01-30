@@ -2,10 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
 
+from unidecode import unidecode
+
 
 class PublishedManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(is_published=True) #?
+        return super().get_queryset().filter(is_published=True)
 
 
 class Men(models.Model):
@@ -29,16 +31,18 @@ class Men(models.Model):
 
     def get_absolute_url(self):
         return reverse('post', kwargs={'post_slug': self.slug})
+    
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            self.slug = unidecode(self.title.lower().replace(' ', '_'))
+        
+        super(Men, self).save(*args, **kwargs)
 
 
     class Meta:
         verbose_name = 'Известные мужчины'
         verbose_name_plural = 'Известные мужчины'
         ordering = ['-time_create', 'title']
-
-        # indexes = [
-        #     models.Index(fields=['slug',]),
-        # ]
 
 
 class Category(models.Model):
