@@ -15,8 +15,6 @@ class AddPostForm(forms.ModelForm):
                                             regex="(^[А-ЯЁ][а-яё]*)( [А-ЯЁ][а-яё]*){0,2}$",
                                             message='Каждое слово в заголовке должно начинаться \
                                             с большой буквы.')])
-    # slug = forms.SlugField(label='URL', 
-    #                        widget=forms.TextInput(attrs={'class': 'form-input'}))
     content = forms.CharField(label='Статья', 
                               widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
 
@@ -29,6 +27,12 @@ class AddPostForm(forms.ModelForm):
     class Meta:
         model = Men
         fields = ['title', 'content', 'photo', 'is_published', 'cat',]
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['author', 'email', 'content']
 
 
 class RegisterUserForm(UserCreationForm):

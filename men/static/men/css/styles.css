@@ -271,6 +271,14 @@ ul.content-table li a:hover {color: #F0711C;}
 }
 .content-text h1 {font-size: 32px;}
 
+.display-flex {
+	display: flex;
+}
+
+.dir-column {
+	flex-direction: column;
+}
+
 ul.lang-list {
 	list-style: none;
 	margin: 0;

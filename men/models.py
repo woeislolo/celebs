@@ -21,11 +21,9 @@ class Men(models.Model):
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор статьи')
 
-
     objects = models.Manager()
     published = PublishedManager()
                     
-
     def __str__(self):
         return self.title
 
@@ -35,9 +33,7 @@ class Men(models.Model):
     def save(self, *args, **kwargs):
         if self.pk is None:
             self.slug = unidecode(self.title.lower().replace(' ', '_'))
-        
         super(Men, self).save(*args, **kwargs)
-
 
     class Meta:
         verbose_name = 'Известные мужчины'
@@ -61,5 +57,22 @@ class Category(models.Model):
         ordering = ['id', ]
 
 
-# class Comment(models.Model):
-#     post = ''
+class Comment(models.Model):
+    post = models.ForeignKey(Men, on_delete=models.CASCADE, related_name='comments', verbose_name='Статья')
+    author = models.CharField(max_length=80, verbose_name='Автор')
+    email = models.EmailField(verbose_name='Email')
+    content = models.TextField(verbose_name='Комментарий')
+    time_create = models.DateTimeField(auto_now_add=True, verbose_name='Время создания')
+    time_update = models.DateTimeField(auto_now=True, verbose_name='Время изменения')
+    active = models.BooleanField(default=True, verbose_name='Опубликовано')
+
+    def __str__(self):
+        return f'Комментарий пользователя {self.author} к статье {self.post}'
+    
+    class Meta:
+        verbose_name = 'Комментарии'
+        verbose_name_plural = 'Комментарии'
+        ordering = ['time_create',]
+        indexes = [
+            models.Index(fields=['time_create',]),
+        ]

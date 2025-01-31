@@ -1,9 +1,10 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
+from django.views.decorators.http import require_POST
 
 from men.forms import *
 from men.utils import *
@@ -57,16 +58,37 @@ class MenCategory(DataMixin, ListView):
         return context | c_def
 
 
-class ShowPost(DataMixin, DetailView):
-    model = Men
-    template_name = 'men/post.html'
-    slug_url_kwarg = 'post_slug'  # чтобы в маршрутах использовать свою переменную post_slug
-    context_object_name = 'post'
+def post_detail(request, post_slug):
+    """Отображение статьи и формы комментария (GET)"""
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title=context['post'])
-        return context | c_def
+    post = get_object_or_404(Men, is_published=True, slug=post_slug)
+    comments = post.comments.filter(active=True)
+    form = CommentForm()
+    return render(
+        request=request,
+        template_name='men/post.html',
+        context={
+            'title': post,
+            'post': post,
+            'comments': comments,
+            'form': form
+            }
+        )
+    
+
+@require_POST
+def post_comment(request, post_slug):
+    """Обработка формы комментария (POST)."""
+
+    post = get_object_or_404(klass=Men, is_published=True, slug=post_slug)
+    comment = None
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.save()
+    
+    return redirect('post', post_slug=post_slug)
 
 
 class AddPage(LoginRequiredMixin, DataMixin, CreateView):

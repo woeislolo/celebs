@@ -11,7 +11,8 @@ urlpatterns = [
     path('login/', LoginUser.as_view(), name='login'),
     path('logout/', logout_user, name='logout'),
     path('register/', RegisterUser.as_view(), name='register'),
-    path('post/<slug:post_slug>', ShowPost.as_view(), name='post'),
+    path('post/<slug:post_slug>', post_detail, name='post'),
+    path('post/<slug:post_slug>/comment/', post_comment, name='post_comment'),
     path('category/<slug:cat_slug>', MenCategory.as_view(), name='category'),
     path('404/', PageNotFound.as_view(), name='404'),
     ]

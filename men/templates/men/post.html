@@ -4,10 +4,38 @@
 
 <h1>{{ post.title }}</h1>
 
-{% if post.photo %}
-<p><img class='img-article-left' src="{{ post.photo.url }}"></p>
-{% endif %}
+<div>
+    {% if post.photo %}
+    <p><img class='img-article-left' src="{{ post.photo.url }}"></p>
+    {% endif %}
+    <p>{{ post.content|linebreaks }}</p>
+</div>
+<br>
 
-<p>{{ post.content|linebreaks }}</p>
+<div> 
+    {% with comments.count as total_comments %}
+        {% if total_comments < 0 %}
+        <h3>Комментариев пока нет.</h3>
+
+        {% else %}
+        <h3>Комментариев: {{ total_comments }}</h3>
+            {% for comment in comments %}
+                <div>
+                    <p>
+                    {{ comment.author }},
+                    {{ comment.time_create }}:
+                    </p>
+                    {{ comment.content|linebreaks }}
+                    {% if not forloop.last %}
+                    <hr>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+<br>
+
+{% include "men/comment_form.html" %}
 
 {% endblock %}
