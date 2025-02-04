@@ -6,6 +6,8 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from django.views.decorators.http import require_POST
 
+from taggit.models import Tag
+
 from men.forms import *
 from men.utils import *
 
@@ -30,8 +32,12 @@ class MenHome(DataMixin, ListView):
     context_object_name = 'posts'
 
     def get_queryset(self):
-        # return Men.objects.filter(is_published=True).select_related('cat')
-        return Men.published.select_related('cat')
+        post_list = Men.published.select_related('cat')
+        if self.kwargs:
+            tag = self.kwargs['tag_slug']
+            tag = get_object_or_404(Tag, slug=tag)
+            post_list = post_list.filter(tags__in=[tag])
+        return post_list
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -60,7 +66,7 @@ class MenCategory(DataMixin, ListView):
 
 def post_detail(request, post_slug):
     """Отображение статьи и формы комментария (GET)"""
-
+        
     post = get_object_or_404(Men, is_published=True, slug=post_slug)
     comments = post.comments.filter(active=True)
     form = CommentForm()

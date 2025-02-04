@@ -1,4 +1,5 @@
 celebs_cache/
+old_working_requirements.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

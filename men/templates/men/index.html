@@ -9,6 +9,7 @@
             <div class="article-panel">
                 <p class="first">Категория: {{ p.cat }}</p>
                 <p class="last">Дата: {{ p.time_update|date:"d-m-Y H:i:s" }}</p>
+                <p>Теги: {{ p.tags.all|join:", " }}
             </div>
 
             {% if p.photo %}

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 
     'captcha',
     'debug_toolbar',
+    'taggit',
 
     'men.apps.MenConfig',
     # 'django_extensions',
@@ -69,9 +70,7 @@ ROOT_URLCONF = 'celebs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates'),
-                 ],
+        'DIRS': ['templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -145,7 +144,10 @@ MEDIA_URL = '/media/'
 
 # LOGIN_REDIRECT_URL = '/'
 
-INTERNAL_IPS = ['127.0.0.1', ]  # для django toolbar
+
+# django debug toolbar
+INTERNAL_IPS = ['127.0.0.1', ]
+
 
 CACHES = {
     'default': {

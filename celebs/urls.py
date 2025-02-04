@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.static import serve
 
+from debug_toolbar.toolbar import debug_toolbar_urls
+
 from celebs import settings
 from men.views import *
 
@@ -13,16 +15,13 @@ urlpatterns = [
     path('captcha/', include('captcha.urls')),
 ]
 
+urlpatterns += debug_toolbar_urls()
 
-# handler404='men.views.page_not_found'
 handler404 = PageNotFound.as_view()
 
 
 if settings.DEBUG:
-    import debug_toolbar  # импортируется только в дебаге, если вынести выше, не сработает
-
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += [path('__debug__/', include(debug_toolbar.urls)),]
 else:
     urlpatterns += [re_path(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT})]
     urlpatterns += [re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT})]

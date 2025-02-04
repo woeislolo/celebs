@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 
 from unidecode import unidecode
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
@@ -20,6 +21,7 @@ class Men(models.Model):
     is_published = models.BooleanField(default=True, verbose_name='Опубликовано')
     cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категория')
     author = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name='Автор статьи')
+    tags = TaggableManager()
 
     objects = models.Manager()
     published = PublishedManager()

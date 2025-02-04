@@ -5,6 +5,7 @@ from .views import *
 
 urlpatterns = [
     path('', MenHome.as_view(), name='home'),
+    path('tag/<slug:tag_slug>/', MenHome.as_view(), name='post_list_by_tag'), # tag/jyp/
     path('search/', SearchResult.as_view(), name='search'),
     path('add_page/', AddPage.as_view(), name='add_page'),
     path('contact/', ContactFormView.as_view(), name='contact'),
