@@ -51,4 +51,13 @@
 
 {% include "men/comment_form.html" %}
 
+<h2>Похожие посты:</h2>
+{% for post in similar_posts %}
+<p>
+<a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+</p>
+{% empty %}
+Здесь пока ничего нет.
+{% endfor %}
+
 {% endblock %}

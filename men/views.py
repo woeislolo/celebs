@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.db.models import Count
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
@@ -70,6 +71,12 @@ def post_detail(request, post_slug):
     post = get_object_or_404(Men, is_published=True, slug=post_slug)
     comments = post.comments.filter(active=True)
     form = CommentForm()
+
+    # 4 похожих поста: чем больше общих тегов, тем выше в рекомендациях
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Men.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags','-time_create')[:4]
+
     return render(
         request=request,
         template_name='men/post.html',
@@ -77,8 +84,8 @@ def post_detail(request, post_slug):
             'title': post,
             'post': post,
             'comments': comments,
-            'form': form
-            }
+            'form': form,
+            'similar_posts': similar_posts}
         )
     
 
