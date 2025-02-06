@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.contrib.postgres.search import SearchVector
 from django.db.models import Count
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
@@ -54,7 +55,6 @@ class MenCategory(DataMixin, ListView):
     allow_empty = False
 
     def get_queryset(self):
-        # return Men.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True).select_related('cat')
         return Men.published.filter(cat__slug=self.kwargs['cat_slug']).select_related('cat')
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -125,12 +125,13 @@ class SearchResult(DataMixin, ListView):
     template_name = 'men/search.html'
     context_object_name = 'posts'
     result_num = 0
-    query = ''
+    query = None
 
     def get_queryset(self):
-        self.query = self.request.GET.get('q', '')  # вводить поиск.запрос надо с учетом регистра, "спасибо" sqlite
-        self.result_num = len(Men.published.filter(title__contains=self.query))
-        return Men.published.filter(title__contains=self.query)  # в sqlite сенситив-кейз только в пределах ASCII
+        self.query = self.request.GET.get('q', '') 
+        search_result = Men.published.annotate(search=SearchVector('title', 'content'),).filter(search=self.query)
+        self.result_num = search_result.count()
+        return search_result
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

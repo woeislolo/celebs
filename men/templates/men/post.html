@@ -4,24 +4,25 @@
 
 <h1>{{ post.title }}</h1>
 
-<div>
+<div> 
     {% if post.photo %}
     <p><img class='img-article-left' src="{{ post.photo.url }}"></p>
     {% endif %}
     <p>{{ post.content|linebreaks }}</p>
     <br>
 
-    {% if post.tags %}
-    <p>Теги: 
-        {% for tag in post.tags.all %}
-        <a href="{% url "post_list_by_tag" tag.slug %}">
-        {{ tag.name }}
-        </a>
-        {% if not forloop.last %}, {% endif %}
-        {% endfor %}
-    </p>
-    {% endif %}
-
+    {% with post.tags as tags %}
+        {% if tags.count > 0 %}
+        <p>Теги:
+            {% for tag in post.tags.all %}
+            <a href="{% url "post_list_by_tag" tag.slug %}">
+            {{ tag.name }}
+            </a>
+            {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+        </p>
+        {% endif %}
+    {% endwith %}
 </div>
 <br>
 

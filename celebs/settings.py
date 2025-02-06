@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 import os
 from pathlib import Path
 
-# from dotenv import dotenv_values
+from dotenv import dotenv_values
 
 
-# config = dotenv_values()
+config = dotenv_values()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 
@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '$s*%r1gecmnezq$gythz)w3y6$-0+vahi$*s)n!cl@t5uve=-w'
+SECRET_KEY = config['project_secret_key']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django.contrib.postgres',
 
     'captcha',
     'debug_toolbar',
@@ -91,6 +93,14 @@ WSGI_APPLICATION = 'celebs.wsgi.application'
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config['db_name'],
+        "USER": config["db_user"],
+        "PASSWORD": config["db_password"],
+        "HOST": config["db_host"],
+        "PORT": config["db_port"],
+    },
+    'sqlite3': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }

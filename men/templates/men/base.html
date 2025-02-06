@@ -24,14 +24,7 @@
 				{% endfor %}
 
 				<li>
-				<form action="{% url 'search' %}" method="get">
-<!--					{# csrf_token #}-->
-				<input name="q" type="text" placeholder="Поиск">
-				<button type="submit">
-					<i class="icon icon-search"></i>
-					<span class="visuallyhidden">Search</span>
-				</button>
-				</form>
+				{% include "men/search_form.html" %}
 				</li>
 
 				{% if request.user.is_authenticated %}
