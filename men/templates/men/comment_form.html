@@ -1,8 +1,18 @@
 <div>
 <h3>Добавить комментарий</h3>
 <form action="{% url "post_comment" post.slug %}" method="post">
-    {{ form.as_p }}
     {% csrf_token %}
-    <p><input type="submit" value="Добавить комментарий"></p>
+    
+    <div class="form-error">{{ form.non_field_errors}}</div>
+
+    {% for f in form %}
+        <p><label class="form-label" for="{{ f.id_for_label }}"> {{ f.label }} </label>
+        {{ f }}
+        </p>
+        <div class="form-error">{{ f.errors }}</div>
+    {% endfor %} 
+
+    <button type="submit">Добавить комментарий</button>
+
 </form>
 </div>

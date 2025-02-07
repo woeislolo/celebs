@@ -12,7 +12,9 @@
         {% if f.id_for_label == 'id_captcha_1'%}
         <p>{{ f }}</p>
         {% else %}
-        <p><label class="form-label" for="{{ f.id_for_label }}"> {{ f.label }} </label>{{ f }}</p>
+        <p><label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}</label>
+        {{ f }}
+        </p>
         {% endif %}
 
         <div class="form-error">{{ f.errors }}</div>

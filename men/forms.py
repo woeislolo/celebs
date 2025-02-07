@@ -30,18 +30,27 @@ class AddPostForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
+    author = forms.CharField(label='Имя',
+                            widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.CharField(label='Email',
+                            widget=forms.TextInput(attrs={'class': 'form-input'}))
+    content = forms.CharField(label='Комментарий', 
+                              widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+    
     class Meta:
         model = Comment
         fields = ['author', 'email', 'content']
 
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    email = forms.EmailField(label='E-mail', widget=forms.EmailInput(attrs={'class': 'form-input'}))
-    password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    # в классе мета (как у пред.класса) в widgets все, кроме 1ого поля, нужно писать как сейчас через переменную,
-    # иначе джанго не применяет почему-то к ним стили
+    username = forms.CharField(label='Логин', 
+                               widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(label='Email', 
+                             widget=forms.EmailInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(label='Пароль', 
+                                widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Повтор пароля', 
+                                widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = User
@@ -49,8 +58,10 @@ class RegisterUserForm(UserCreationForm):
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Логин', 
+                               widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password = forms.CharField(label='Пароль', 
+                               widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = User
@@ -58,7 +69,12 @@ class LoginUserForm(AuthenticationForm):
 
 
 class ContactForm(forms.Form):
-    name = forms.CharField(label='Имя', max_length=255,  widget=forms.TextInput(attrs={'class': 'form-input'}))
-    email = forms.EmailField(label='E-mail', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    content = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
-    captcha = CaptchaField(widget=CaptchaTextInput(attrs={'class': 'form-input', 'style': 'margin: 0px 5px'}))
+    name = forms.CharField(label='Имя', 
+                           max_length=255, 
+                           widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(label='Email', 
+                             widget=forms.TextInput(attrs={'class': 'form-input'}))
+    content = forms.CharField(label='Сообщение', 
+                              widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
+    captcha = CaptchaField(widget=CaptchaTextInput(attrs={'class': 'form-input', 
+                                                          'style': 'margin: 0px 5px'}))

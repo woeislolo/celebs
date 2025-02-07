@@ -85,7 +85,7 @@ def post_detail(request, post_slug):
             'post': post,
             'comments': comments,
             'form': form,
-            'similar_posts': similar_posts}
+            'similar_posts': similar_posts} # TODO: не хватает контекста, который получаем из DataMixin для CBV
         )
     
 
