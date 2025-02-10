@@ -38,6 +38,8 @@ ALLOWED_HOSTS = ['127.0.0.1',]
 # Application definition
 
 INSTALLED_APPS = [
+    'men.apps.MenConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,7 +53,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'taggit',
 
-    'men.apps.MenConfig',
     # 'django_extensions',
 ]
 
@@ -152,7 +153,9 @@ STATICFILES_DIRS = [
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-# LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
 
 
 # django debug toolbar
@@ -165,3 +168,6 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'celebs_cache'),
     }
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

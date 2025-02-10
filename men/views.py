@@ -1,6 +1,7 @@
 from django.contrib.auth import logout, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, \
+    PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.postgres.search import SearchVector
 from django.db.models import Count
 from django.shortcuts import redirect, render, get_object_or_404
@@ -157,7 +158,7 @@ class ContactFormView(DataMixin, FormView):
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
-    template_name = 'men/register.html'
+    template_name = 'men/registration/register.html'
     success_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -173,7 +174,7 @@ class RegisterUser(DataMixin, CreateView):
 
 class LoginUser(DataMixin, LoginView):
     form_class = LoginUserForm
-    template_name = 'men/login.html'
+    template_name = 'registration/login.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
