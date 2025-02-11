@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.validators import RegexValidator
 
 from captcha.fields import CaptchaField, CaptchaTextInput
@@ -53,7 +53,7 @@ class RegisterUserForm(UserCreationForm):
                                 widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('username', 'email', 'password1', 'password2')
 
 
@@ -64,7 +64,7 @@ class LoginUserForm(AuthenticationForm):
                                widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
-        model = User
+        model = get_user_model()
         fields = ('username', 'password')
 
 
@@ -78,3 +78,16 @@ class ContactForm(forms.Form):
                               widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
     captcha = CaptchaField(widget=CaptchaTextInput(attrs={'class': 'form-input', 
                                                           'style': 'margin: 0px 5px'}))
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=32, 
+                                 label='Имя',
+                                 widget=forms.TextInput(attrs={'class': 'form-input'}))
+    last_name = forms.CharField(max_length=32, 
+                                label='Фамилия',
+                                widget=forms.TextInput(attrs={'class': 'form-input'}))
+
+    class Meta:
+        model = Profile
+        fields = ['photo',]

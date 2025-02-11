@@ -4,6 +4,17 @@ from django.utils.safestring import mark_safe  # не экранирует те�
 from .models import *
 
 
+@admin.register(Profile)
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'date_of_birth', 'get_preview_photo',)
+    raw_id_fields = ('user',)
+
+    def get_preview_photo(self, object):
+        return mark_safe(f"<img src='{object.photo.url}' width=60>")
+
+    get_preview_photo.short_description = 'Превью фото'
+
+
 @admin.register(Men)
 class MenAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'get_preview_photo', 'is_published', 'author', 'time_create', 'time_update')

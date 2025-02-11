@@ -1,12 +1,13 @@
 from django.contrib.auth import logout, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, \
     PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.postgres.search import SearchVector
 from django.db.models import Count
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView, UpdateView
 from django.views.decorators.http import require_POST
 
 from taggit.models import Tag
@@ -158,8 +159,8 @@ class ContactFormView(DataMixin, FormView):
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
-    template_name = 'men/registration/register.html'
-    success_url = reverse_lazy('login')
+    template_name = 'registration/register.html'
+    # success_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -168,6 +169,7 @@ class RegisterUser(DataMixin, CreateView):
 
     def form_valid(self, form):
         user = form.save()
+        Profile.objects.create(user=user)
         login(self.request, user)
         return redirect('home')
 
@@ -188,3 +190,48 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+class UserProfile(DataMixin, DetailView):
+    template_name = 'registration/profile.html'
+    context_object_name = 'user_profile'
+
+    def get_object(self):
+        user_pk = User.objects.filter(pk=self.kwargs['user_pk'])[0].pk
+        profile = Profile.objects.filter(user_id=user_pk).select_related('user').get()
+        return profile
+    
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title=self.get_object().user.username)
+        return context | c_def
+
+
+class UpdateUserProfile(DataMixin, UpdateView):
+    template_name = 'registration/profile_update.html'
+    context_object_name = 'user_profile'
+    form_class = ProfileUpdateForm
+
+    def get_object(self):
+        user_pk = User.objects.filter(pk=self.kwargs['user_pk'])[0].pk
+        profile = Profile.objects.filter(user_id=user_pk).select_related('user').get()
+        return profile
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateUserProfile, self).get_context_data(**kwargs)
+        user = self.request.user
+        context['profile_form'] = ProfileUpdateForm(
+            instance=self.request.user.profile,
+            initial={'first_name': user.first_name, 
+                     'last_name': user.last_name}
+            )
+        c_def = self.get_user_context(title=self.get_object().user.username)
+        return context | c_def
+
+    def form_valid(self, form):
+        profile = form.save()
+        user = profile.user
+        user.last_name = form.cleaned_data['last_name']
+        user.first_name = form.cleaned_data['first_name']
+        user.save()
+        return HttpResponseRedirect(reverse('home'))

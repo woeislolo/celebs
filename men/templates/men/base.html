@@ -29,7 +29,7 @@
 
 				{% if request.user.is_authenticated %}
 				<li class="last">
-					<a href="#">{{ user.username }}</a> |
+					<a href="{% url 'user_profile' user_pk=request.user.pk %}">{{ user.username }}</a> |
 					<a href="{% url 'logout' %}">Выйти</a>
 				</li>
 				{% else %}
