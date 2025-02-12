@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -67,6 +68,7 @@ class MenCategory(DataMixin, ListView):
         return context | c_def
 
 
+# не передаем контекст
 def post_detail(request, post_slug):
     """Отображение статьи и формы комментария (GET)"""
         
@@ -119,6 +121,7 @@ class AddPage(LoginRequiredMixin, DataMixin, CreateView):
     
     def form_valid(self, form):
         form.instance.author = self.request.user
+        messages.success(self.request, 'Статья успешно добавлена.')
         return super().form_valid(form)
 
 
@@ -154,13 +157,13 @@ class ContactFormView(DataMixin, FormView):
         return context | c_def
 
     def form_valid(self, form):
+        messages.success(self.request, 'Спасибо за обратную связь!')
         return redirect('home')
 
 
 class RegisterUser(DataMixin, CreateView):
     form_class = RegisterUserForm
     template_name = 'registration/register.html'
-    # success_url = reverse_lazy('login')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -171,6 +174,7 @@ class RegisterUser(DataMixin, CreateView):
         user = form.save()
         Profile.objects.create(user=user)
         login(self.request, user)
+        messages.success(self.request, 'Вы успешно зарегистрировались.')
         return redirect('home')
 
 
@@ -211,6 +215,7 @@ class UpdateUserProfile(DataMixin, UpdateView):
     template_name = 'registration/profile_update.html'
     context_object_name = 'user_profile'
     form_class = ProfileUpdateForm
+    success_url = reverse_lazy('home')
 
     def get_object(self):
         user_pk = User.objects.filter(pk=self.kwargs['user_pk'])[0].pk
@@ -234,4 +239,9 @@ class UpdateUserProfile(DataMixin, UpdateView):
         user.last_name = form.cleaned_data['last_name']
         user.first_name = form.cleaned_data['first_name']
         user.save()
-        return HttpResponseRedirect(reverse('home'))
+        messages.success(self.request, 'Профиль успешно изменен.')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Возникла ошибка при редактировании профиля.')
+        return self.render_to_response(self.get_context_data(form=form))
