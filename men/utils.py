@@ -28,3 +28,18 @@ class DataMixin:
         # if 'cat_selected' not in context:
         #     context['cat_selected'] = 0
         return context
+
+def get_user_context(request, **kwargs):
+    context = kwargs
+    cats = cache.get('cats')
+    if not cats:
+        cats = Category.objects.annotate(Count('men'))
+        cache.set('cats', cats, 20)
+
+    user_menu = menu.copy()
+    if not request.user.is_authenticated:
+        user_menu.pop(0)
+    context['menu'] = user_menu
+
+    context['cats'] = cats
+    return context

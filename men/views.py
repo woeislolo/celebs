@@ -6,7 +6,7 @@ from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordCha
     PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView
 from django.contrib.postgres.search import SearchVector
 from django.db.models import Count
-from django.shortcuts import redirect, render, get_object_or_404, HttpResponseRedirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView, UpdateView
 from django.views.decorators.http import require_POST
@@ -68,7 +68,6 @@ class MenCategory(DataMixin, ListView):
         return context | c_def
 
 
-# не передаем контекст
 def post_detail(request, post_slug):
     """Отображение статьи и формы комментария (GET)"""
         
@@ -81,15 +80,17 @@ def post_detail(request, post_slug):
     similar_posts = Men.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
     similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags','-time_create')[:4]
 
+    context = get_user_context(request=request, 
+                               post=post,
+                               comments=comments,
+                               form=form,
+                               similar_posts=similar_posts
+        )
+
     return render(
         request=request,
         template_name='men/post.html',
-        context={
-            'title': post,
-            'post': post,
-            'comments': comments,
-            'form': form,
-            'similar_posts': similar_posts} # TODO: не хватает контекста, который получаем из DataMixin для CBV
+        context=context
         )
     
 
