@@ -10,7 +10,9 @@ class ProfileAdmin(admin.ModelAdmin):
     raw_id_fields = ('user',)
 
     def get_preview_photo(self, object):
-        return mark_safe(f"<img src='{object.photo.url}' width=60>")
+        if object.photo:
+            return mark_safe(f"<img src='{object.photo.url}' width=60>")
+        return None
 
     get_preview_photo.short_description = 'Превью фото'
 

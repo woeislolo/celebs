@@ -2,7 +2,6 @@
 
 {% block content %}
     <h1>Редактировать профиль {{ title }}</h1>
-    {% comment %} <p>You can edit your account using the following form:</p> {% endcomment %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-error">{{ form.non_field_errors}}</div>

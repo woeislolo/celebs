@@ -13,6 +13,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('men.urls')),
     path('captcha/', include('captcha.urls')),
+    path('social-auth/', include('social_django.urls', namespace='social')),
 ]
 
 urlpatterns += debug_toolbar_urls()

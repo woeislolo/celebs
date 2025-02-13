@@ -32,7 +32,7 @@ SECRET_KEY = config['project_secret_key']
 # DEBUG = False
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1',]
+ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -53,7 +53,9 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'taggit',
 
-    # 'django_extensions',
+    'social_django',
+
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +129,21 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# auth
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    # 'men.authentification.EmailAuthBackend',
+    'social_core.backends.google.GoogleOAuth2',
+    ]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config['GOOGLE_OAUTH2_KEY']
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config['SECRET']
+
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -150,18 +167,14 @@ STATICFILES_DIRS = [
     BASE_DIR / 'men/static',
 ]
 
+# media
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
-
-LOGIN_REDIRECT_URL = 'home'
-LOGIN_URL = 'login'
-LOGOUT_URL = 'logout'
-
 
 # django debug toolbar
 INTERNAL_IPS = ['127.0.0.1', ]
 
-
+# cache
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
@@ -169,5 +182,16 @@ CACHES = {
     }
 }
 
-
+# email console
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# email 
+# EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# EMAIL_HOST = 'smtp.yandex.ru' 
+# EMAIL_PORT = 465
+# EMAIL_USE_TLS = False
+# EMAIL_USE_SSL = True
+
+# EMAIL_HOST_USER = 'example@yandex.ru' # почта, в которой регистрировали приложение
+# EMAIL_HOST_PASSWORD = 'password' # пароль приложения
+# DEFAULT_FROM_EMAIL = 'example@yandex.ru'
