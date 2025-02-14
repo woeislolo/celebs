@@ -130,19 +130,16 @@ class SearchResult(DataMixin, ListView):
     model = Men
     template_name = 'men/search.html'
     context_object_name = 'posts'
-    result_num = 0
     query = None
 
     def get_queryset(self):
         self.query = self.request.GET.get('q', '') 
         search_result = Men.published.annotate(search=SearchVector('title', 'content'),).filter(search=self.query)
-        self.result_num = search_result.count()
         return search_result
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Результаты поиска')
-        context['result_num'] = self.result_num
         context['query'] = self.query
         return context | c_def
 

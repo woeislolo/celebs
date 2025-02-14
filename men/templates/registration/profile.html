@@ -10,10 +10,10 @@
     {% endif %}
     <br>
 
-    <p>Имя: {{user_profile.user.first_name}}</p>
-    <p>Фамилия: {{user_profile.user.last_name}}</p>
-    <p>Email: {{user_profile.user.email}}</p>
-    <p>День рождения: {{user_profile.date_of_birth}}</p>
+    <p>Имя: {{ user_profile.user.first_name }}</p>
+    <p>Фамилия: {{ user_profile.user.last_name }}</p>
+    <p>Email: {{ user_profile.user.email }}</p>
+    <p>День рождения: {{ user_profile.date_of_birth }}</p>
 
     <p>
     <a href="{% url 'update_user_profile' user_pk=request.user.pk %}">Редактировать данные профиля</a>

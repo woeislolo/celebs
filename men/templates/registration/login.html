@@ -3,6 +3,7 @@
 {% block content %}
 
 <h1>{{ title }}</h1>
+<div>
 <form method="post">
     {% csrf_token %}
 
@@ -23,9 +24,16 @@
 <p>
 <a href="{% url 'register' %}">Регистрация</a>
 </p>
+</div>
 
-<p>
-<a href="{% url "social:begin" "google-oauth2" %}">Sign in with Google</a>
-</p>
+<div class="social">
+    <ul>
+      <li class="google">
+        <a href="{% url 'social:begin' 'google-oauth2' %}">
+          Авторизоваться через Google
+        </a>
+      </li>
+    </ul>
+  </div>
 
 {% endblock %}
